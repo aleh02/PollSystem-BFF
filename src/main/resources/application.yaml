@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: poll-bff-service
+
+bff:
+  upstream:
+    base-url: http://localhost:8080/rest/api/v0
