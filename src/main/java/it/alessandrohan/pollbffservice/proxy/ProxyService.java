@@ -1,11 +1,15 @@
 package it.alessandrohan.pollbffservice.proxy;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class ProxyService {
@@ -15,6 +19,7 @@ public class ProxyService {
         this.restClient = restClient;
     }
 
+    //@CircuitBreaker(name = "upstreamProxy", fallbackMethod = "forwardFallback")
     public ResponseEntity<byte[]> forward(
             HttpMethod method,
             String path,
@@ -40,7 +45,19 @@ public class ProxyService {
                     .body(ex.getResponseBodyAsByteArray());
         }
     }
-
+/*
+    private ResponseEntity<byte[]> forwardFallback(
+            HttpMethod method,
+            String path,
+            String query,
+            HttpHeaders incomingHeaders,
+            byte[] body,
+            Throwable t
+    ) {
+        byte[] message = "Upstream unavailable".getBytes(StandardCharsets.UTF_8);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(message);
+    }
+*/
     //remove host header from requests
     private HttpHeaders filterRequestHeaders(HttpHeaders incoming) {
         HttpHeaders filtered = new HttpHeaders();

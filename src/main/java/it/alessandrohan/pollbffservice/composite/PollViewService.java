@@ -1,5 +1,6 @@
 package it.alessandrohan.pollbffservice.composite;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import it.alessandrohan.pollbffservice.composite.dto.response.PollViewResponse;
 import it.alessandrohan.pollbffservice.composite.dto.upstream.PollDetailsResponse;
 import it.alessandrohan.pollbffservice.composite.dto.upstream.VoteResponse;
@@ -17,6 +18,7 @@ public class PollViewService {
         this.restClient = restClient;
     }
 
+    //@CircuitBreaker(name = "upstreamComposite", fallbackMethod = "pollViewFallback")
     public PollViewResponse getPollView(Long id, String authorization) {
         try {
             PollDetailsResponse details =
@@ -50,4 +52,9 @@ public class PollViewService {
             );
         }
     }
+/*
+    private PollViewResponse pollViewFallback(Long id, String authorization, Throwable t) {
+        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Upstream unavailable", t);
+    }
+ */
 }

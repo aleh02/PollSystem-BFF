@@ -5,3 +5,21 @@ spring:
 bff:
   upstream:
     base-url: http://localhost:8080/rest/api/v0
+    connect-timeout: 2s
+    read-timeout: 5s
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      upstreamProxy:
+        slidingWindowSize: 20
+        minimumNumberOfCalls: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 5
+      upstreamComposite:
+        slidingWindowSize: 20
+        minimumNumberOfCalls: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 5
